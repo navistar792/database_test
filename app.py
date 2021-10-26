@@ -1,7 +1,10 @@
 
 import psycopg2
 from config import config
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, abort, url_for, json
+import os
+import json
+import html
 
 # def get_parts():
     # """ query parts from the parts table """
@@ -34,7 +37,13 @@ def index():
 def v_timestamp():
     cur.execute("SELECT * FROM category2")
     data = cur.fetchall()
-    return render_template('v_timestamp.html', data=data)
+    rowarray_list=[]
+    for row in data:
+        t = (row[0], row[1], row[2], row[3])
+        rowarray_list.append(t)
+    j = json.dumps(rowarray_list, default=str)
+    print(j)    
+    return render_template('v_timestamp.html', data=j)
 
 if __name__ == "__main__":
     app.run(debug=True)
